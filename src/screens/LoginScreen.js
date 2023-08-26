@@ -1,16 +1,16 @@
 import React from 'react'
 import { Button, StyleSheet, Text, View } from 'react-native';
-import Colors from './../constants/Colors.js';
+import Colors from '../constants/Colors.js';
 
-const Login = (props) => {
+const LoginScreen = (props) => {
 
 
   return (
     <View style={styles.container}>
-      <Text style={styles.containerText}>Login</Text>
+      <Text style={styles.containerText}>LoginScreen</Text>
       <Button title='Go to register screen' onPress={() => props.navigation.navigate("Register")} />
       <View style={styles.registerBtnBlock}>
-        <Button title='Login' onPress={() => props.navigation.navigate("Tabs")} />
+        <Button title='LoginScreen' onPress={() => props.navigation.navigate("Tabs")} />
       </View>
     </View>
   )
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     containerText: {
-        color: "white",
+        color: Colors.white,
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 20,
@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Login
+export default LoginScreen

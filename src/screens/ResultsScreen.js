@@ -1,10 +1,12 @@
 import React from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native';
+import Colors from '../constants/Colors.js';
 
-const Results = (props) => {
+
+const ResultsScreen = (props) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.containerText}>Results</Text>
+      <Text style={styles.containerText}>ResultsScreen</Text>
     </View>
   )
 }
@@ -12,16 +14,16 @@ const Results = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "lightblue",
+        backgroundColor: Colors.secondary,
         alignItems: "center",
         justifyContent: "center"
     },
     containerText: {
-        color: "white",
+        color: Colors.white,
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 20,
     }
 })
 
-export default Results
+export default ResultsScreen

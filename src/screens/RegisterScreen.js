@@ -1,11 +1,12 @@
 import React from 'react'
 import { Button, StyleSheet, Text, View } from 'react-native'
+import Colors from '../constants/Colors.js';
 
-const Quiz = ({navigation}) => {
+const RegisterScreen = (props) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.containerText}>Quiz</Text>
-      <Button title={"See results"} onPress={() => navigation.navigate("Results")} />
+      <Text style={styles.containerText}>RegisterScreen</Text>
+      <Button title='Go back to login' onPress={() => props.navigation.goBack()} />
     </View>
   )
 }
@@ -13,15 +14,16 @@ const Quiz = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "yellow",
+        backgroundColor: Colors.primary,
         alignItems: "center",
         justifyContent: "center"
     },
     containerText: {
+        color: Colors.white,
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 20,
     }
 })
 
-export default Quiz
+export default RegisterScreen

@@ -1,10 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native';
+import Colors from '../constants/Colors.js';
 
-const History = () => {
+
+const HistoryScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.containerText}>History</Text>
+      <Text style={styles.containerText}>HistoryScreen</Text>
     </View>
   )
 }
@@ -12,14 +14,15 @@ const History = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "lightred",
+        backgroundColor: Colors.danger,
         alignItems: "center",
         justifyContent: "center"
     },
     containerText: {
         fontSize: 18,
         fontWeight: "bold",
+        color: Colors.white,
     }
 })
 
-export default History
+export default HistoryScreen
