@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native';
+import Colors from './../constants/Colors.js';
 
 const Login = (props) => {
 
@@ -18,7 +19,7 @@ const Login = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "purple",
+        backgroundColor: Colors.primary,
         alignItems: "center",
         justifyContent: "center"
     },
