@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button, Image, StyleSheet, Text, View, Dimensions } from 'react-native';
+import React, { useState } from 'react'
+import { Button, Image, StyleSheet, Text, View, Dimensions, Alert } from 'react-native';
 import Colors from '../constants/Colors.js';
 import CustomInput from '../components/CustomInput.js';
 import CustomButton from '../components/CustomButton.js';
@@ -9,6 +9,25 @@ import { StatusBar } from 'expo-status-bar';
 const WINDOW = Dimensions.get("window");
 
 const LoginScreen = (props) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    if(email.length == 0) {
+      Alert.alert("Renseignez votre email svp!");
+      return;
+    }
+
+    if(password.length == 0) {
+      Alert.alert("Renseignez votre mot de passe svp!");
+      return;
+    }
+
+    console.log(email, password);
+
+    props.navigation.replace("Tabs")
+  }
+
   return (
     <View style={styles.container}>
       <Image style={styles.appLogo} source={require("../assets/quiz-logo-1.png")} />
@@ -18,12 +37,15 @@ const LoginScreen = (props) => {
       <CustomInput 
         placeholder={"Email"}
         keyboardType='email-address'
+        onChangeText={(text) => setEmail(text)}
       />
       <CustomInput 
         placeholder={"Mot de passe"} 
-        secureTextEntry />
+        secureTextEntry
+        onChangeText={(text) => setPassword(text)}
+      />
 
-      <CustomButton style={styles.loginBtn} title='Connexion' onPress={() => props.navigation.navigate("Tabs")} />
+      <CustomButton style={styles.loginBtn} title='Connexion' onPress={handleLogin} />
       
 
       <View style={styles.registerBlock}>
@@ -60,7 +82,7 @@ const styles = StyleSheet.create({
       marginTop: 20,
     },
     registerBlock: {
-      width: "70%",
+      width: "80%",
       flexDirection: 'row',
       flexWrap: "wrap",
       alignItems: 'center',

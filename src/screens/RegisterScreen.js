@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, StyleSheet, Text, View } from 'react-native'
 import Colors from '../constants/Colors.js';
 import CustomInput from '../components/CustomInput.js';
@@ -7,24 +7,53 @@ import CustomButton from '../components/CustomButton.js';
 import { StatusBar } from 'expo-status-bar';
 
 const RegisterScreen = (props) => {
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleRegistration = () => {
+    if(fullName.length == 0) {
+      Alert.alert("Renseignez votre nom et prénom svp!");
+      return;
+    }
+
+    if(email.length == 0) {
+      Alert.alert("Renseignez votre email svp!");
+      return;
+    }
+
+    if(password.length == 0) {
+      Alert.alert("Renseignez votre mot de passe svp!");
+      return;
+    }
+
+    console.log(fullName, email, password);
+
+    props.navigation.replace("Tabs");
+  }
+
   return (
-    <View style={styles.container}>
       <View style={styles.container}>        
         <Text style={styles.appName}>Création de compte</Text>
 
         <CustomInput 
-          placeholder={"Nom"}
+          placeholder={"Nom & prénom"}
+          onChangeText={(text) => setFullName(text)}
         />
 
         <CustomInput 
-          placeholder={"Prénoms"}
+          placeholder={"Email"}
+          keyboardType='email-address'
+          onChangeText={(text) => setEmail(text)}
         />
 
         <CustomInput 
           placeholder={"Mot de passe"} 
-          secureTextEntry />
+          secureTextEntry
+          onChangeText={(text) => setPassword(text)}
+        />
 
-        <CustomButton style={styles.loginBtn} title='Créer' onPress={() => props.navigation.navigate("Tabs")} />
+        <CustomButton style={styles.loginBtn} title='Créer' onPress={handleRegistration} />
         
         <View style={styles.registerBlock}>
           <Text style={styles.noAccountText}>Vous avez déjà un compte? </Text>
@@ -33,7 +62,6 @@ const RegisterScreen = (props) => {
         
         <StatusBar style='light' />
       </View>
-    </View>
   )
 }
 
