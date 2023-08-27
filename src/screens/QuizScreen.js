@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Button, FlatList, StyleSheet, Text, View, Pressable, TouchableOpacity } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, View, Pressable, TouchableOpacity, SafeAreaView } from 'react-native';
 import Colors from '../constants/Colors.js';
 import dataQuestion from '../data/dataQuestion.js';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
 // 
 
 const QuizScreen = ({ navigation }) => {
@@ -18,11 +18,12 @@ const QuizScreen = ({ navigation }) => {
   // answerStatus ( true, false)
   const [answerStatus, setAnswerStatus] = useState(null)
 
-  // answers  ( true, false)
+  // answerStatus ( true, false)
   const [answer, setAnswer] = useState([])
 
   // answer selected 
-  const [selectedAnswerIndex, setselectedAnswerIndex] = useState(null)
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null)
+
 
   useEffect(() => {
     if (selectedAnswerIndex !== null) {
@@ -38,9 +39,21 @@ const QuizScreen = ({ navigation }) => {
   }, [selectedAnswerIndex])
 
   useEffect(() => {
-    setselectedAnswerIndex(null);
+    setSelectedAnswerIndex(null);
     setAnswerStatus(null);
   }, [currentQuestion])
+
+
+  useEffect(() => {
+    if (questionIndex + 1 > totalQuestion) {
+      navigation.navigate("Results", {
+        answers: answer,
+        points: score,
+        quiz: quiz
+      })
+    }
+  }, [currentQuestion]);
+
 
   const currentQuestion = dataQuestion[questionIndex]
 
@@ -48,47 +61,103 @@ const QuizScreen = ({ navigation }) => {
 
     return (
       <Pressable
-        onPress={() => selectedAnswerIndex === null && setselectedAnswerIndex(item.id)}
+        onPress={() => selectedAnswerIndex === null && setSelectedAnswerIndex(item.id)}
         style={
-          selectedAnswerIndex === questionIndex &&
-            questionIndex === currentQuestion.correct ?
+          selectedAnswerIndex === item.id &&
+            item.id === currentQuestion.correct ?
             styles.itemReponseValide :
             selectedAnswerIndex != null &&
-              selectedAnswerIndex === questionIndex ?
+              selectedAnswerIndex === item.id ?
               styles.itemReponseInValide :
               styles.itemReponse
         }
       >
-        {selectedAnswerIndex === questionIndex && questionIndex === currentQuestion?.correct ?
-          (<AntDesign style={styles.responseNumber} name="checkcircle" size={24} color="green" />) :
-          selectedAnswerIndex != null && selectedAnswerIndex === questionIndex ?
-            (<AntDesign name="closecircle" size={24} color="red" />) :
-            (<Text style={styles.responseNumber}>{item.id} </Text>)
+        {selectedAnswerIndex === item.id && item.id === currentQuestion?.correct ?
+          (<AntDesign style={styles.responseNumber} name="checkcircle" size={20} color="white" />) :
+          selectedAnswerIndex != null && selectedAnswerIndex === item.id ?
+            (<AntDesign style={styles.responseNumber} name="closecircle" size={20} color="white" />) :
+            (<Text style={styles.responseNumber}
+            >{item.id} </Text>)
         }
 
-        <Text style={{ marginLeft: 10, paddingRight: 40 }}>{item.rep}</Text>
+        <Text style={{
+          marginLeft: 10,
+          paddingRight: 40,
+          fontSize: 18,
+          color: (selectedAnswerIndex === item.id && item.id === currentQuestion?.correct) || (selectedAnswerIndex != null && selectedAnswerIndex === item.id)
+            ? Colors.white : Colors.primary
+
+        }}
+        >
+          {item.rep}
+        </Text>
       </Pressable>
     )
   }
 
+  const nextQuestion = () => {
+    setQuestionIndex(questionIndex + 1);
+    setSelectedAnswerIndex(null);
+    setAnswerStatus(null);
+  }
+
+  const results = () => {
+    navigation.navigate("Results", {
+      /* answers: answer, */
+      points: score,
+      questions: totalQuestion,
+      quiz: "quiz"
+    });
+  }
   return (
-    <View>
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10 }}>
-        <Text> {questionIndex} / {totalQuestion}</Text>
+    <SafeAreaView style={styles.questionContainer}>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10, margin: 15 }}>
+        <Text style={{ color: Colors.primary }}> {questionIndex + 1} / {totalQuestion}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Text>Quitter</Text>
+          <Text style={{ color: Colors.primary }}>Quitter</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.questionContainer}>
-        <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 12 }}>{currentQuestion?.question}</Text>
+      <View style={{ marginHorizontal: 15 }}>
+        <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 12, color: Colors.primary }}>{currentQuestion?.question}</Text>
         <FlatList
           key={'#'}
           keyExtractor={(reponse) => reponse.id}
           data={currentQuestion.reponses}
           renderItem={renderItemReponse}
+          horizontal={false}
         />
       </View>
-    </View>
+      {
+        questionIndex + 1 >= totalQuestion ?
+          (<Pressable
+            onPress={results}
+            style={
+              answerStatus === null ? null :
+                {
+                  marginTop: 45,
+                  marginHorizontal: 20,
+                  backgroundColor: Colors.primary,
+                  padding: 10,
+                  borderRadius: 20,
+                }}>
+            {answerStatus === null ? null :
+              (<Text style={{ fontSize: 18, textAlign: "center", fontWeight: "bold", color: Colors.white, }}> Reponse </Text>)
+            }
+          </Pressable>) : answerStatus === null ? null :
+            (<Pressable onPress={nextQuestion}
+              style={answerStatus === null ? null : {
+                marginTop: 45,
+                marginHorizontal: 20,
+                backgroundColor: Colors.primary,
+                padding: 10,
+                borderRadius: 20,
+              }}>
+              {answerStatus === null ? null :
+                (<Text style={{ fontSize: 18, textAlign: "center", fontWeight: "bold", color: Colors.white, }}> Question Suivante </Text>)
+              }
+            </Pressable>)
+      }
+    </SafeAreaView>
 
   )
 }
@@ -107,25 +176,23 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
   questionContainer: {
-    marginTop: 10,
-    backgroundColor: "#F0F8FF",
-    padding: 10,
-    borderRadius: 6,
+    flex: 1,
+    backgroundColor: Colors.white,
+    padding: 45,
   },
   itemReponse: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 0.5,
-    borderColor: "grey",
+    borderColor: Colors.primary,
     marginVertical: 15,
     borderRadius: 20,
-    marginTop: 20
+    marginTop: 20,
   },
   itemReponseValide: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 0.5,
-    borderColor: "grey",
+    borderColor: Colors.primary,
     marginVertical: 15,
     borderRadius: 20,
     marginTop: 20,
@@ -134,21 +201,18 @@ const styles = StyleSheet.create({
   itemReponseInValide: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 0.5,
-    borderColor: "grey",
+    borderColor: Colors.primary,
     marginVertical: 15,
     borderRadius: 20,
     marginTop: 20,
-    backgroundColor: "red"
+    backgroundColor: "red",
   },
   responseNumber: {
-    borderColor: "grey",
     textAlign: "center",
-    borderWidth: 0.5,
-    width: 50,
-    height: 50,
-    borderRadius: 20,
-    padding: 15,
+    width: 40,
+    height: 40,
+    paddingTop: 5,
+    fontSize: 28,
   },
 })
 
